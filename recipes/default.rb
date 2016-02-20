@@ -69,6 +69,7 @@ git "#{node['vim-fully-build']['source-directory']}/vim" do
   repository "https://github.com/vim/vim.git"
   revision   'master'
   action     :sync
+  timeout    600
 end
 
 execute 'Build the vim' do
@@ -77,8 +78,9 @@ execute 'Build the vim' do
     ./configure --with-features=huge --enable-gui=gtk2 --enable-multibyte --enable-xim --enable-fontset --enable-perlinterp --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp --with-luajit --prefix=#{node['vim-fully-build']['prefix']} --enable-fail-if-missing
     make
   EOC
-  user   node['vim-fully-build']['user']
-  group  node['vim-fully-build']['group']
+  user    node['vim-fully-build']['user']
+  group   node['vim-fully-build']['group']
+  timeout 3600
 end
 
 execute 'install the vim' do
