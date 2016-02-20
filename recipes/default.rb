@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-package 'Install required packages' do
+package 'Install required packages for system' do
   package_name %w(
     git
     gettext
@@ -26,6 +26,12 @@ package 'Install required packages' do
     libxmu-dev
     libgtk2.0-dev
     libxpm-dev
+    )
+  action :install
+end
+
+package 'Install required packages for programming languages' do
+  package_name %w(
     libperl-dev
     python-dev
     python3-dev
@@ -38,6 +44,12 @@ package 'Install required packages' do
     libluajit-5.1-2
     libluajit-5.1-common
     libluajit-5.1-dev
+    )
+  action :install
+end
+
+package 'Install required packages for source edit' do
+  package_name %w(
     autoconf
     automake 
     cproto
