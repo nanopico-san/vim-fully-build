@@ -57,19 +57,32 @@ package 'Install required packages for source edit' do
   action :install
 end
 
-directory node['vim-fully-build']['source-directory'] do
+directory "#{node['vim-fully-build']['source-directory']}" do
+  mode   '0755'
   owner  node['vim-fully-build']['user']
   group  node['vim-fully-build']['group']
-  mode   '0755'
   action :create
-  not_if { File.exist? node['vim-fully-build']['source-directory'] }
+  not_if { File.exist? "#{node['vim-fully-build']['source-directory']}" }
 end
 
-git "#{node['vim-fully-build']['source-directory']}/vim" do
-  repository "https://github.com/vim/vim.git"
-  revision   'master'
-  action     :sync
-  timeout    600
+execute 'Git clone' do
+  cwd     "#{node['vim-fully-build']['source-directory']}"
+  command <<-EOC
+    git clone https://github.com/vim/vim.git #{node['vim-fully-build']['source-directory']}/vim
+  EOC
+  user   node['vim-fully-build']['user']
+  group  node['vim-fully-build']['group']
+  not_if { File.exist? "#{node['vim-fully-build']['source-directory']}/vim" }
+end
+
+execute 'Git pull' do
+  cwd     "#{node['vim-fully-build']['source-directory']}/vim"
+  command <<-EOC
+    git pull origin master
+  EOC
+  user   node['vim-fully-build']['user']
+  group  node['vim-fully-build']['group']
+  only_if { File.exist? "#{node['vim-fully-build']['source-directory']}/vim" }
 end
 
 execute 'Build the vim' do
